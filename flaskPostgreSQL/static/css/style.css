@@ -1,0 +1,36 @@
+/* Minimal and clean custom styles */
+body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #212529;
+}
+
+.card {
+    border-radius: 0.5rem;
+}
+
+.table th {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #495057;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.badge-pet {
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 0.35em 0.65em;
+    border-radius: 20px;
+}
+
+.badge-dog { background-color: #e3f2fd; color: #0d6efd; }
+.badge-cat { background-color: #fce4ec; color: #c2185b; }
+.badge-rabbit { background-color: #f3e5f5; color: #7b1fa2; }
+.badge-bird { background-color: #e8f5e9; color: #2e7d32; }
+.badge-other { background-color: #fff3e0; color: #e65100; }
+
+.btn-action {
+    padding: 0.25rem 0.6rem;
+    font-size: 0.825rem;
+}
+

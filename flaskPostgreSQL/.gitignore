@@ -1,0 +1,35 @@
+# Environment & Secrets (NEVER commit your real credentials to Git)
+.env
+.env.*
+!.env.example
+*.env
+
+# Python Bytecode & Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# Virtual Environments
+.venv/
+venv/
+ENV/
+env/
+env.bak/
+venv.bak/
+
+# IDE & Code Editors
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db
+
+# Database Local Data & Logs
+*.log
+*.pid
+pgdata/
+test_pgdata/
+*.sqlite3
