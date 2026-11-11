@@ -85,7 +85,7 @@ Before running the application, make sure you have:
 
 ### Step 1: Clone or Navigate to the Project Directory
 ```bash
-cd m:\iliyas
+cd flaskPostgreSQL
 ```
 
 ### Step 2: (Optional but Recommended) Create a Virtual Environment
