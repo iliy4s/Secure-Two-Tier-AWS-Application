@@ -5,15 +5,49 @@ let deleteModalInstance = null;
 
 // Initialize on DOM ready
 document.addEventListener("DOMContentLoaded", () => {
-    deleteModalInstance = new bootstrap.Modal(document.getElementById("deleteConfirmModal"));
-    loadUsers();
+    deleteModalInstance = new bootstrap.Modal(
+        document.getElementById("deleteConfirmModal")
+    );
 
-    // Attach form submit handler
     const form = document.getElementById("userForm");
+    const tbody = document.getElementById("usersTableBody");
+
     form.addEventListener("submit", handleFormSubmit);
 
-    // Attach modal confirm delete handler
-    document.getElementById("confirmDeleteBtn").addEventListener("click", executeDelete);
+    document.getElementById("confirmDeleteBtn")
+        .addEventListener("click", executeDelete);
+
+    document.getElementById("closeAlertBtn")
+        .addEventListener("click", hideAlert);
+
+    document.getElementById("cancelBtn")
+        .addEventListener("click", resetForm);
+
+    document.getElementById("refreshBtn")
+        .addEventListener("click", loadUsers);
+
+    // Handle edit and delete button clicks using event delegation
+    tbody.addEventListener("click", (event) => {
+        const button = event.target.closest("button[data-action]");
+
+        if (!button) return;
+
+        const id = Number(button.dataset.userId);
+
+        if (button.dataset.action === "edit") {
+            startEditUser(id);
+        }
+
+        if (button.dataset.action === "delete") {
+            promptDeleteUser(
+                id,
+                button.dataset.fullName,
+                button.dataset.pet
+            );
+        }
+    });
+
+    loadUsers();
 });
 
 /**
@@ -60,6 +94,7 @@ function getPetBadgeClass(pet) {
  */
 async function loadUsers() {
     const tbody = document.getElementById("usersTableBody");
+
     try {
         const response = await fetch("/api/users");
         const result = await response.json();
@@ -69,52 +104,108 @@ async function loadUsers() {
         }
 
         const users = result.data || [];
-        tbody.innerHTML = "";
+
+        // Remove existing rows
+        tbody.replaceChildren();
 
         if (users.length === 0) {
-            tbody.innerHTML = `
-                <tr>
-                    <td colspan="5" class="text-center py-4 text-muted">
-                        <i class="bi bi-inbox fs-3 d-block mb-1"></i>
-                        No users found. Use the form above to add a user.
-                    </td>
-                </tr>
-            `;
+            const row = document.createElement("tr");
+            const cell = document.createElement("td");
+
+            cell.colSpan = 5;
+            cell.className = "text-center py-4 text-muted";
+            cell.textContent =
+                "No users found. Use the form above to add a user.";
+
+            row.appendChild(cell);
+            tbody.appendChild(row);
+
             return;
         }
 
         users.forEach(user => {
-            const tr = document.createElement("tr");
-            tr.id = `user-row-${user.id}`;
-            tr.innerHTML = `
-                <td class="fw-semibold text-secondary">${escapeHtml(String(user.id))}</td>
-                <td>${escapeHtml(user.fname)}</td>
-                <td>${escapeHtml(user.lname)}</td>
-                <td>
-                    <span class="badge badge-pet ${getPetBadgeClass(user.pet)}">
-                        ${escapeHtml(user.pet)}
-                    </span>
-                </td>
-                <td class="text-end pe-3">
-                    <button class="btn btn-outline-primary btn-action me-1" onclick="startEditUser(${user.id})" title="Edit user">
-                        <i class="bi bi-pencil-square me-1"></i>Edit
-                    </button>
-                    <button class="btn btn-outline-danger btn-action" onclick="promptDeleteUser(${user.id}, '${escapeHtml(user.fname)} ${escapeHtml(user.lname)}', '${escapeHtml(user.pet)}')" title="Delete user">
-                        <i class="bi bi-trash me-1"></i>Delete
-                    </button>
-                </td>
-            `;
-            tbody.appendChild(tr);
+            const row = document.createElement("tr");
+            row.id = `user-row-${user.id}`;
+
+            // ID cell
+            const idCell = document.createElement("td");
+            idCell.textContent = user.id;
+            idCell.className = "fw-semibold text-secondary";
+
+            // First name cell
+            const fnameCell = document.createElement("td");
+            fnameCell.textContent = user.fname;
+
+            // Last name cell
+            const lnameCell = document.createElement("td");
+            lnameCell.textContent = user.lname;
+
+            // Pet cell
+            const petCell = document.createElement("td");
+            const petBadge = document.createElement("span");
+
+            petBadge.className =
+                `badge badge-pet ${getPetBadgeClass(user.pet)}`;
+
+            petBadge.textContent = user.pet;
+            petCell.appendChild(petBadge);
+
+            // Actions cell
+            const actionsCell = document.createElement("td");
+            actionsCell.className = "text-end pe-3";
+
+            // Edit button
+            const editButton = document.createElement("button");
+            editButton.type = "button";
+            editButton.className =
+                "btn btn-outline-primary btn-action me-1";
+
+            editButton.dataset.action = "edit";
+            editButton.dataset.userId = user.id;
+            editButton.title = "Edit user";
+
+            editButton.textContent = "Edit";
+
+            // Delete button
+            const deleteButton = document.createElement("button");
+            deleteButton.type = "button";
+            deleteButton.className =
+                "btn btn-outline-danger btn-action";
+
+            deleteButton.dataset.action = "delete";
+            deleteButton.dataset.userId = user.id;
+            deleteButton.dataset.fullName =
+                `${user.fname} ${user.lname}`;
+            deleteButton.dataset.pet = user.pet;
+            deleteButton.title = "Delete user";
+
+            deleteButton.textContent = "Delete";
+
+            actionsCell.append(editButton, deleteButton);
+
+            row.append(
+                idCell,
+                fnameCell,
+                lnameCell,
+                petCell,
+                actionsCell
+            );
+
+            tbody.appendChild(row);
         });
+
     } catch (err) {
-        tbody.innerHTML = `
-            <tr>
-                <td colspan="5" class="text-center py-4 text-danger">
-                    <i class="bi bi-exclamation-triangle fs-4 d-block mb-1"></i>
-                    ${escapeHtml(err.message)}
-                </td>
-            </tr>
-        `;
+        tbody.replaceChildren();
+
+        const row = document.createElement("tr");
+        const cell = document.createElement("td");
+
+        cell.colSpan = 5;
+        cell.className = "text-center py-4 text-danger";
+        cell.textContent = err.message;
+
+        row.appendChild(cell);
+        tbody.appendChild(row);
     }
 }
 
@@ -193,8 +284,8 @@ async function startEditUser(id) {
         document.getElementById("pet").value = user.pet;
 
         // Update form UI to Edit mode
-        document.getElementById("formTitle").innerHTML = `<i class="bi bi-pencil-square me-2 text-primary"></i>Edit User #${user.id}`;
-        document.getElementById("submitBtn").innerHTML = `<i class="bi bi-save me-1"></i> Update User`;
+        document.getElementById("formTitle").textContent = `Edit User #${user.id}`;
+        document.getElementById("submitBtn").textContent = "Update User";
         document.getElementById("cancelBtn").classList.remove("d-none");
 
         // Scroll smoothly to form
@@ -209,8 +300,13 @@ async function startEditUser(id) {
  */
 function promptDeleteUser(id, fullName, pet) {
     deleteTargetId = id;
-    const detailsContainer = document.getElementById("deleteModalUserDetails");
-    detailsContainer.innerHTML = `<strong>ID:</strong> ${id} &nbsp;|&nbsp; <strong>Name:</strong> ${fullName} &nbsp;|&nbsp; <strong>Pet:</strong> ${pet}`;
+
+    const detailsContainer =
+        document.getElementById("deleteModalUserDetails");
+
+    detailsContainer.textContent =
+        `ID: ${id} | Name: ${fullName} | Pet: ${pet}`;
+
     deleteModalInstance.show();
 }
 
@@ -260,8 +356,8 @@ function resetForm() {
     form.classList.remove("was-validated");
 
     document.getElementById("userId").value = "";
-    document.getElementById("formTitle").innerHTML = `<i class="bi bi-person-plus me-2 text-primary"></i>Add User`;
-    document.getElementById("submitBtn").innerHTML = `<i class="bi bi-check-circle me-1"></i> Submit`;
+    document.getElementById("formTitle").textContent = "Add User";
+    document.getElementById("submitBtn").textContent = "Submit";
     document.getElementById("cancelBtn").classList.add("d-none");
 }
 

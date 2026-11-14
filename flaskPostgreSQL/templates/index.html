@@ -28,7 +28,8 @@
     <!-- Global Alert Box -->
     <div id="alertBox" class="alert alert-dismissible fade d-none" role="alert">
         <span id="alertMessage"></span>
-        <button type="button" class="btn-close" aria-label="Close" onclick="hideAlert()"></button>
+        <button type="button" id="closeAlertBtn"
+        class="btn-close" aria-label="Close"></button>
     </div>
 
     <!-- Section A: Add / Edit User Form -->
@@ -76,9 +77,6 @@
                     <button type="submit" id="submitBtn" class="btn btn-primary px-4">
                         <i class="bi bi-check-circle me-1"></i> Submit
                     </button>
-                    <button type="button" id="cancelBtn" class="btn btn-outline-secondary d-none" onclick="resetForm()">
-                        <i class="bi bi-x-circle me-1"></i> Cancel
-                    </button>
                 </div>
             </form>
         </div>
@@ -90,9 +88,6 @@
             <h2 class="h5 mb-0 fw-semibold text-dark">
                 <i class="bi bi-table me-2 text-primary"></i>User Records
             </h2>
-            <button class="btn btn-sm btn-outline-primary" onclick="loadUsers()" title="Refresh table">
-                <i class="bi bi-arrow-clockwise me-1"></i> Refresh
-            </button>
         </div>
         <div class="card-body p-0">
             <div class="table-responsive">

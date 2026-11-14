@@ -27,24 +27,6 @@ def get_db():
     finally:
         conn.close()
 
-def init_db():
-    """Create the users table if it does not already exist."""
-    create_table_query = """
-    CREATE TABLE IF NOT EXISTS users (
-        id SERIAL PRIMARY KEY,
-        fname VARCHAR(100) NOT NULL,
-        lname VARCHAR(100) NOT NULL,
-        pet VARCHAR(50) NOT NULL
-    );
-    """
-    try:
-        with get_db() as conn:
-            with conn.cursor() as cur:
-                cur.execute(create_table_query)
-        print("Database initialized: 'users' table is ready.")
-    except Exception as e:
-        print(f"Warning: Could not automatically initialize database table: {e}")
-
 def get_all_users():
     """Retrieve all users ordered by ID ascending."""
     with get_db() as conn:

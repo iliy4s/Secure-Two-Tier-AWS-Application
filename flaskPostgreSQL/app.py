@@ -8,6 +8,7 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 app.config.from_object(Config)
+Config.validate()
 
 ALLOWED_PETS = {"Dog", "Cat", "Rabbit", "Bird", "Other"}
 
@@ -133,7 +134,6 @@ def remove_user(user_id):
         return jsonify({"success": False, "error": "Database error while deleting user."}), 500
 
 if __name__ == "__main__":
-    db.init_db()
     app.run(
         host=Config.HOST,
         port=Config.PORT,
