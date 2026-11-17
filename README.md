@@ -13,13 +13,11 @@ A portfolio project that deploys a Flask-based user and pet management applicati
 - [Technology stack](#technology-stack)
 - [AWS infrastructure](#aws-infrastructure)
 - [Application request flow](#application-request-flow)
-- [Repository structure](#repository-structure)
 - [Run locally](#run-locally)
 - [Deploy on EC2](#deploy-on-ec2)
 - [Environment variables](#environment-variables)
 - [API endpoints](#api-endpoints)
 - [Validation and testing](#validation-and-testing)
-- [Screenshots and demo](#screenshots-and-demo)
 - [Security decisions and limitations](#security-decisions-and-limitations)
 - [Cost and cleanup](#cost-and-cleanup)
 - [Future improvements](#future-improvements)
@@ -30,7 +28,7 @@ A portfolio project that deploys a Flask-based user and pet management applicati
 
 The application is deployed in a custom VPC in the **Asia Pacific (Mumbai) region (`ap-south-1`)**.
 
-![Secure two-tier AWS architecture](docs/architecture/architecture.png)
+![Secure two-tier AWS architecture](docs/architecture/my_vpc_architecture.png)
 
 **High-level design:**
 
@@ -40,7 +38,7 @@ The application is deployed in a custom VPC in the **Asia Pacific (Mumbai) regio
 4. Flask connects to the RDS PostgreSQL endpoint on TCP port 5432.
 5. RDS is deployed in private database subnets and has public accessibility disabled.
 
-> Add the architecture image at `docs/architecture/architecture.png`, or change the image path above to match the actual filename committed to the repository.
+> Add the architecture image at `docs/architecture/my_vpc_architecture.png`, or change the image path above to match the actual filename committed to the repository.
 
 ## Features
 
@@ -152,49 +150,6 @@ Private Amazon RDS for PostgreSQL
 ```
 
 This separates the public web entry point from the database. The database is not directly exposed to the internet.
-
----
-
-## Repository structure
-
-The application source directory is `flaskPostgreSQL/`. If this folder is nested inside a larger repository, preserve that parent folder in the paths below.
-
-```text
-repository/
-├── README.md
-├── network-plan.md
-├── docs/
-│   ├── architecture/
-│   │   └── architecture.png
-│   ├── screenshots/
-│   │   ├── 01-ec2-session-manager.png
-│   │   ├── 02-nginx-running.png
-│   │   ├── 03-application-setup.png
-│   │   ├── 04-private-rds-database.png
-│   │   ├── 05-ec2-rds-connection.png
-│   │   └── 06-application-live.png
-│   └── demo/
-│       └── demo-link.md
-└── flaskPostgreSQL/
-    ├── app.py
-    ├── config.py
-    ├── db.py
-    ├── init_db.sql
-    ├── requirements.txt
-    ├── .env.example
-    ├── .gitignore
-    ├── templates/
-    │   └── index.html
-    ├── static/
-    │   ├── css/
-    │   │   └── style.css
-    │   └── js/
-    │       └── main.js
-    └── tests/
-        └── test_app.py
-```
-
-Adjust this tree if your actual Git repository has a different root layout. Do not commit the real `.env` file or the Python virtual environment.
 
 ---
 
@@ -406,30 +361,6 @@ python -m unittest discover -s tests
 ```
 
 Do not claim all tests pass unless they have been run against the current committed version.
-
----
-
-## Screenshots and demo
-
-Store screenshots in the repository and embed them with relative Markdown paths:
-
-### AWS infrastructure
-
-![EC2 instance and deployment environment](docs/screenshots/01-ec2-session-manager.png)
-
-![Private RDS database configuration](docs/screenshots/04-private-rds-database.png)
-
-### Application running
-
-![Application running through the EC2 public endpoint](docs/screenshots/06-application-live.png)
-
-### Demo video
-
-Add a public or unlisted video URL after recording:
-
-- **Demo:** [Add demo video link](docs/demo/demo-link.md)
-
-Only keep image references for files that have actually been added to the repository. Replace the example filenames above with your final screenshot filenames.
 
 ---
 
