@@ -20,12 +20,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("closeAlertBtn")
         .addEventListener("click", hideAlert);
 
-    document.getElementById("cancelBtn")
-        .addEventListener("click", resetForm);
-
-    document.getElementById("refreshBtn")
-        .addEventListener("click", loadUsers);
-
     // Handle edit and delete button clicks using event delegation
     tbody.addEventListener("click", (event) => {
         const button = event.target.closest("button[data-action]");
@@ -286,7 +280,6 @@ async function startEditUser(id) {
         // Update form UI to Edit mode
         document.getElementById("formTitle").textContent = `Edit User #${user.id}`;
         document.getElementById("submitBtn").textContent = "Update User";
-        document.getElementById("cancelBtn").classList.remove("d-none");
 
         // Scroll smoothly to form
         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -358,7 +351,6 @@ function resetForm() {
     document.getElementById("userId").value = "";
     document.getElementById("formTitle").textContent = "Add User";
     document.getElementById("submitBtn").textContent = "Submit";
-    document.getElementById("cancelBtn").classList.add("d-none");
 }
 
 /**
